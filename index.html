@@ -237,29 +237,100 @@
     </div>
     <div class="die">
       <svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg">
-        <rect x="1" y="1" width="298" height="218" fill="none" stroke="#243033" stroke-width="1"/>
-        <g fill="none" stroke="#5FA9B8" stroke-width="1" opacity="0.9">
-          <rect x="24" y="24" width="80" height="44"/>
-          <rect x="196" y="24" width="80" height="44"/>
-          <rect x="24" y="152" width="80" height="44"/>
-          <rect x="110" y="88" width="80" height="44"/>
+        <defs>
+          <linearGradient id="boardShade" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#173226"/>
+            <stop offset="100%" stop-color="#0E2018"/>
+          </linearGradient>
+          <linearGradient id="chipShade" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#20292B"/>
+            <stop offset="100%" stop-color="#131A1C"/>
+          </linearGradient>
+        </defs>
+
+        <!-- PCB -->
+        <rect x="6" y="6" width="288" height="208" rx="6" fill="url(#boardShade)" stroke="#2E4A3A" stroke-width="1.2"/>
+
+        <!-- copper traces -->
+        <g stroke="#3F6B52" stroke-width="1" fill="none" opacity="0.8">
+          <path d="M20 40 H80 V70"/>
+          <path d="M20 60 H60 V96"/>
+          <path d="M250 40 H210 V70"/>
+          <path d="M270 60 H230 V96"/>
+          <path d="M20 170 H70 V150"/>
+          <path d="M250 170 H220 V150"/>
         </g>
-        <text x="64" y="49" text-anchor="middle" font-family="IBM Plex Mono" font-size="9" fill="#CE8A4E">RO-PUF</text>
-        <text x="236" y="49" text-anchor="middle" font-family="IBM Plex Mono" font-size="9" fill="#CE8A4E">AES-128</text>
-        <text x="150" y="113" text-anchor="middle" font-family="IBM Plex Mono" font-size="9" fill="#CE8A4E">HMAC-SHA256</text>
-        <text x="64" y="177" text-anchor="middle" font-family="IBM Plex Mono" font-size="8.5" fill="#CE8A4E">PKT CTR</text>
-        <g stroke="#3A4A4E" stroke-width="1">
-          <path d="M104 46 H196" />
-          <path d="M64 68 V152"/>
-          <path d="M150 68 V88"/>
-          <path d="M236 68 V190 H104 V196"/>
+        <g fill="#3F6B52"><circle cx="80" cy="70" r="1.4"/><circle cx="60" cy="96" r="1.4"/><circle cx="210" cy="70" r="1.4"/><circle cx="230" cy="96" r="1.4"/><circle cx="70" cy="150" r="1.4"/><circle cx="220" cy="150" r="1.4"/></g>
+
+        <!-- FPGA package, centered -->
+        <rect x="96" y="66" width="108" height="88" rx="2" fill="url(#chipShade)" stroke="#5FA9B8" stroke-width="1.4"/>
+        <!-- pins -->
+        <g stroke="#8FA0A0" stroke-width="1.2">
+          <path d="M96 78 H86 M96 92 H86 M96 106 H86 M96 120 H86 M96 134 H86 M96 148 H86"/>
+          <path d="M204 78 H214 M204 92 H214 M204 106 H214 M204 120 H214 M204 134 H214 M204 148 H214"/>
+          <path d="M112 66 V56 M126 66 V56 M140 66 V56 M154 66 V56 M168 66 V56 M182 66 V56"/>
+          <path d="M112 154 V164 M126 154 V164 M140 154 V164 M154 154 V164 M168 154 V164 M182 154 V164"/>
         </g>
-        <g fill="#5FA9B8">
-          <circle cx="104" cy="46" r="2"/><circle cx="196" cy="46" r="2"/>
-          <circle cx="64" cy="152" r="2"/><circle cx="150" cy="88" r="2"/>
+        <circle cx="106" cy="76" r="2" fill="#CE8A4E"/>
+
+        <!-- security pipeline synthesized inside the fabric -->
+        <defs>
+          <marker id="pipeArrow" markerWidth="6" markerHeight="6" refX="4" refY="2" orient="auto">
+            <path d="M0,0 L4,2 L0,4 Z" fill="#CE8A4E"/>
+          </marker>
+        </defs>
+        <g stroke="#CE8A4E" stroke-width="0.9" fill="none" marker-end="url(#pipeArrow)">
+          <path d="M126 84 H132"/>
+          <path d="M168 84 H174"/>
+          <path d="M150 90 V96"/>
+          <path d="M150 112 V118"/>
+          <path d="M126 134 H132"/>
+        </g>
+        <g font-family="IBM Plex Mono" font-size="6" fill="#B7C2C2" text-anchor="middle">
+          <rect x="102" y="76" width="24" height="14" fill="none" stroke="#5FA9B8" stroke-width="1"/>
+          <text x="114" y="85">PUF</text>
+          <rect x="132" y="76" width="36" height="14" fill="none" stroke="#5FA9B8" stroke-width="1"/>
+          <text x="150" y="85">SHA-256</text>
+          <rect x="174" y="76" width="26" height="14" fill="none" stroke="#5FA9B8" stroke-width="1"/>
+          <text x="187" y="85">AES</text>
+          <rect x="132" y="96" width="36" height="16" fill="none" stroke="#5FA9B8" stroke-width="1"/>
+          <text x="150" y="107">HMAC</text>
+          <rect x="100" y="118" width="36" height="16" fill="none" stroke="#5FA9B8" stroke-width="1"/>
+          <text x="118" y="129">CTR</text>
+          <text x="150" y="146" fill="#8FA0A0" font-size="6.5">XC7A35T · ARTIX-7</text>
+        </g>
+
+        <!-- USB connector -->
+        <rect x="8" y="92" width="16" height="22" rx="1.5" fill="#8FA0A0" opacity="0.85"/>
+        <text x="16" y="122" text-anchor="middle" font-family="IBM Plex Mono" font-size="6" fill="#8FA0A0">USB</text>
+
+        <!-- oscillator -->
+        <rect x="252" y="88" width="26" height="18" rx="1.5" fill="none" stroke="#8FA0A0"/>
+        <text x="265" y="112" text-anchor="middle" font-family="IBM Plex Mono" font-size="5.5" fill="#8FA0A0">12 MHz OSC</text>
+
+        <!-- GPIO header row -->
+        <g fill="#CE8A4E">
+          <circle cx="30" cy="196" r="2"/><circle cx="42" cy="196" r="2"/><circle cx="54" cy="196" r="2"/><circle cx="66" cy="196" r="2"/><circle cx="78" cy="196" r="2"/><circle cx="90" cy="196" r="2"/>
+        </g>
+        <text x="60" y="210" text-anchor="middle" font-family="IBM Plex Mono" font-size="5.5" fill="#8FA0A0">PMOD / GPIO</text>
+
+        <!-- status LEDs -->
+        <g>
+          <circle cx="220" cy="180" r="3" fill="#5FA9B8"/>
+          <circle cx="232" cy="180" r="3" fill="#CE8A4E"/>
+          <circle cx="244" cy="180" r="3" fill="#3F6B52"/>
+          <circle cx="256" cy="180" r="3" fill="#3F6B52"/>
+        </g>
+        <text x="238" y="196" text-anchor="middle" font-family="IBM Plex Mono" font-size="5.5" fill="#8FA0A0">VIO STATUS</text>
+
+        <!-- slide switches -->
+        <g stroke="#8FA0A0" stroke-width="1.4">
+          <rect x="16" y="150" width="8" height="16" rx="2" fill="none"/>
+          <rect x="28" y="150" width="8" height="16" rx="2" fill="none"/>
+          <rect x="40" y="150" width="8" height="16" rx="2" fill="none"/>
         </g>
       </svg>
-      <div class="die-cap"><span>ARTIX-7 XC7A35T</span><span>16.5 MHz · 0.298 W</span></div>
+      <div class="die-cap"><span>BASYS 3 · ARTIX-7 XC7A35T</span><span>16.5 MHz · 0.298 W</span></div>
     </div>
   </section>
 
