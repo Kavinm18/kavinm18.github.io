@@ -170,7 +170,15 @@
   .edu-card .when{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);}
   .edu-card .org{color:var(--signal);font-size:13.5px;margin-bottom:10px;}
   .edu-card .cgpa{font-family:'IBM Plex Mono',monospace;color:var(--copper);font-size:13px;margin-bottom:10px;}
-  .cert-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+  .cert-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;}
+  .cert-btn{
+    display:inline-flex;align-items:center;gap:6px;
+    font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;
+    padding:8px 14px;border-radius:20px;text-decoration:none;
+    background:var(--copper);color:#131313;
+    transition:background .15s, transform .15s;
+  }
+  .cert-btn:hover{background:#dd9a5d;transform:translateY(-1px);}
 
   /* contact / footer */
   footer{padding:48px 0 40px;}
@@ -226,9 +234,9 @@
 
   <section class="hero" id="top">
     <div>
-      <div class="kicker">// VLSI Design &amp; Verification Engineer</div>
+      <div class="kicker">// VLSI &amp; HARDWARE SECURITY ENGINEER</div>
       <h1>Building trust into silicon, one RTL block at a time.</h1>
-      <p class="lede">Final year B.Tech ECE student at Manipal Institute of Technology, focused on RTL design and functional verification — with hands-on work in hardware-rooted security (PUFs, AES, SHA-256) synthesized and validated on FPGA.</p>
+      <p class="lede">B.Tech ECE student at Manipal Institute of Technology, focused on RTL design and functional verification — with hands-on work in hardware-rooted security (PUFs, AES, SHA-256) synthesized and validated on FPGA.</p>
       <div class="cta-row">
         <a class="btn primary" href="mailto:kavinm865@gmail.com">Email Kavin</a>
         <a class="btn ghost" href="https://github.com/Kavinm18" target="_blank" rel="noopener">GitHub</a>
@@ -339,7 +347,7 @@
     <div class="about-grid">
       <div>
         <p>I'm an Electronics and Communication Engineering student (2023–2027) building a research-oriented track in VLSI — spanning RTL design, FSM-based digital systems, and functional verification with SystemVerilog testbenches.</p>
-        <p>My recent work centers on hardware security: designing a custom Ring Oscillator PUF and a full cryptographic pipeline (AES-128, HMAC-SHA-256) for authenticated and encrypted secure UAV command-and-control communication, synthesized on a Xilinx Artix-7 FPGA. This work is being prepared as an IEEE conference manuscript.</p>
+        <p>My recent work centers on hardware security: designing a custom Ring Oscillator PUF and a full cryptographic pipeline (AES-128, HMAC-SHA-256) for authenticated UAV command-and-control, synthesized on a Xilinx Artix-7 FPGA. This work is being prepared as an IEEE conference manuscript.</p>
         <p>I'm looking to bring that same rigor to a full-time or intern role in RTL design or design verification.</p>
       </div>
       <div class="stat-block">
@@ -366,6 +374,7 @@
           <li>Synthesized the full cryptographic pipeline: 17,500 LUTs, 11,727 registers, 16.5 MHz max frequency, 0.298 W total on-chip power.</li>
           <li>Validated functionality using Vivado/ISim and VIO — 0.000 ns TNS, 7.952 ns WNS, zero failing timing endpoints.</li>
         </ul>
+        <a href="certs-anna-university.pdf" target="_blank" class="cert-btn" style="margin-top:12px;">📄 View internship certificate</a>
       </div>
       <div class="xp-item">
         <div class="role-row">
@@ -376,6 +385,7 @@
           <li>Executed system-level testing for metro projects (DMRC, TS09, PML, MML) — Fluke tests, braking tests, FSD validation.</li>
           <li>Configured IP/network setups, aligned cameras, and performed static gauge checks alongside senior engineers to ensure operational accuracy and safety.</li>
         </ul>
+        <a href="certs-alstom.pdf" target="_blank" class="cert-btn" style="margin-top:12px;">📄 View internship certificate</a>
       </div>
       <div class="xp-item">
         <div class="role-row">
@@ -424,7 +434,7 @@
     <div class="edu-card">
       <div class="role">Hardware-Rooted Secure Communication Architecture for UAV Command and Control Using Multi-Bit RO-PUF, AES-128, and HMAC-SHA-256 on FPGA</div>
       <div class="org" style="margin-top:8px;">Kavin M, Dr V. Jeyalakshmi, P. Varalakshmi — manuscript in preparation, 2026</div>
-      <a href="project-uav-c2.html" class="metric-pill" style="display:inline-block;margin-top:14px;text-decoration:none;">View architecture, FPGA results &amp; outputs →</a>
+      <a href="project-uav-c2.html" class="cert-btn" style="display:inline-block;margin-top:14px;">📊 View architecture, FPGA results &amp; outputs →</a>
     </div>
   </section>
 
@@ -451,8 +461,8 @@
       <div class="cgpa">CGPA: 7.69</div>
       <div style="color:var(--muted);font-size:13.5px;">Relevant coursework: VLSI Design, RTL/Digital System Design, VLSI Testing, Analog Integrated Circuits, Microprocessors, System on Chip Design</div>
       <div class="cert-row">
-        <span class="metric-pill">CMOS Digital VLSI Design — NPTEL</span>
-        <span class="metric-pill">Power Electronics — Coursera</span>
+        <a href="certs-nptel.pdf" target="_blank" class="cert-btn">📄 CMOS Digital VLSI Design — NPTEL</a>
+        <a href="certs-coursera.pdf" target="_blank" class="cert-btn">📄 Power Electronics — Coursera</a>
         <span class="metric-pill">ISWDP Level-1</span>
       </div>
     </div>
