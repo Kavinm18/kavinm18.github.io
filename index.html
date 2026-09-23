@@ -92,9 +92,14 @@
   /* die diagram */
   .die{
     background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
-    padding:18px;position:relative;
+    padding:18px;position:relative;perspective:900px;
   }
-  .die svg{width:100%;height:auto;display:block;}
+  .die svg{width:100%;height:auto;display:block;transition:transform .15s ease-out;transform-style:preserve-3d;}
+  #fpgaHero .pipe-block{opacity:0;transform:scale(.75);transform-origin:center;transform-box:fill-box;
+    transition:opacity .5s ease, transform .5s ease;}
+  #fpgaHero .pipe-trace{stroke-dasharray:26;stroke-dashoffset:26;transition:stroke-dashoffset .5s ease;}
+  #fpgaDie.in-view #fpgaHero .pipe-block{opacity:1;transform:scale(1);}
+  #fpgaDie.in-view #fpgaHero .pipe-trace{stroke-dashoffset:0;}
   .die-cap{
     font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--muted);
     margin-top:10px;display:flex;justify-content:space-between;
@@ -243,8 +248,8 @@
         <a class="btn ghost" href="https://linkedin.com/in/kavinmathivanan08" target="_blank" rel="noopener">LinkedIn</a>
       </div>
     </div>
-    <div class="die">
-      <svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg">
+    <div class="die" id="fpgaDie">
+      <svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg" id="fpgaHero">
         <defs>
           <linearGradient id="boardShade" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stop-color="#173226"/>
@@ -288,23 +293,23 @@
           </marker>
         </defs>
         <g stroke="#CE8A4E" stroke-width="0.9" fill="none" marker-end="url(#pipeArrow)">
-          <path d="M126 84 H132"/>
-          <path d="M168 84 H174"/>
-          <path d="M150 90 V96"/>
-          <path d="M150 112 V118"/>
-          <path d="M126 134 H132"/>
+          <path class="pipe-trace" style="transition-delay:.55s" d="M126 84 H132"/>
+          <path class="pipe-trace" style="transition-delay:.85s" d="M168 84 H174"/>
+          <path class="pipe-trace" style="transition-delay:.7s" d="M150 90 V96"/>
+          <path class="pipe-trace" style="transition-delay:1.0s" d="M150 112 V118"/>
+          <path class="pipe-trace" style="transition-delay:1.15s" d="M126 134 H132"/>
         </g>
         <g font-family="IBM Plex Mono" font-size="6" fill="#B7C2C2" text-anchor="middle">
-          <rect x="102" y="76" width="24" height="14" fill="none" stroke="#5FA9B8" stroke-width="1"/>
-          <text x="114" y="85">PUF</text>
-          <rect x="132" y="76" width="36" height="14" fill="none" stroke="#5FA9B8" stroke-width="1"/>
-          <text x="150" y="85">SHA-256</text>
-          <rect x="174" y="76" width="26" height="14" fill="none" stroke="#5FA9B8" stroke-width="1"/>
-          <text x="187" y="85">AES</text>
-          <rect x="132" y="96" width="36" height="16" fill="none" stroke="#5FA9B8" stroke-width="1"/>
-          <text x="150" y="107">HMAC</text>
-          <rect x="100" y="118" width="36" height="16" fill="none" stroke="#5FA9B8" stroke-width="1"/>
-          <text x="118" y="129">CTR</text>
+          <rect class="pipe-block" style="transition-delay:.1s" x="102" y="76" width="24" height="14" fill="none" stroke="#5FA9B8" stroke-width="1"/>
+          <text class="pipe-block" style="transition-delay:.1s" x="114" y="85">PUF</text>
+          <rect class="pipe-block" style="transition-delay:.3s" x="132" y="76" width="36" height="14" fill="none" stroke="#5FA9B8" stroke-width="1"/>
+          <text class="pipe-block" style="transition-delay:.3s" x="150" y="85">SHA-256</text>
+          <rect class="pipe-block" style="transition-delay:.6s" x="174" y="76" width="26" height="14" fill="none" stroke="#5FA9B8" stroke-width="1"/>
+          <text class="pipe-block" style="transition-delay:.6s" x="187" y="85">AES</text>
+          <rect class="pipe-block" style="transition-delay:.8s" x="132" y="96" width="36" height="16" fill="none" stroke="#5FA9B8" stroke-width="1"/>
+          <text class="pipe-block" style="transition-delay:.8s" x="150" y="107">HMAC</text>
+          <rect class="pipe-block" style="transition-delay:1.05s" x="100" y="118" width="36" height="16" fill="none" stroke="#5FA9B8" stroke-width="1"/>
+          <text class="pipe-block" style="transition-delay:1.05s" x="118" y="129">CTR</text>
           <text x="150" y="146" fill="#8FA0A0" font-size="6.5">XC7A35T · ARTIX-7</text>
         </g>
 
@@ -485,5 +490,23 @@
     <div class="fine">© 2026 Kavin M — Built for VLSI &amp; hardware security roles</div>
   </footer>
 </div>
+<script>
+  var dieEl = document.getElementById('fpgaDie');
+  if (dieEl) {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if(e.isIntersecting) dieEl.classList.add('in-view'); });
+    }, {threshold:0.35});
+    io.observe(dieEl);
+
+    var svgEl = document.getElementById('fpgaHero');
+    window.addEventListener('scroll', function(){
+      var r = dieEl.getBoundingClientRect();
+      var center = window.innerHeight/2;
+      var offset = (r.top + r.height/2 - center) / center; // -1..1 roughly
+      offset = Math.max(-1, Math.min(1, offset));
+      svgEl.style.transform = 'rotateX(' + (offset*-6) + 'deg) rotateY(' + (offset*8) + 'deg)';
+    }, {passive:true});
+  }
+</script>
 </body>
 </html>
