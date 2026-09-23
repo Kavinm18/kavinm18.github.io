@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hardware-Rooted Secure UAV C2 — Kavin M</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B0F10; --panel:#12191B; --line:#243033;
+    --text:#E7E9E7; --muted:#8FA0A0; --copper:#CE8A4E; --signal:#5FA9B8;
+    --radius:3px; box-sizing:border-box;
+  }
+  *{box-sizing:inherit;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;line-height:1.55;
+    padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);-webkit-font-smoothing:antialiased;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  .wrap{max-width:880px;margin:0 auto;padding:0 28px;}
+  a{color:var(--signal);}
+  .back{display:inline-block;margin:28px 0 8px;font-family:'IBM Plex Mono',monospace;font-size:13px;text-decoration:none;color:var(--muted);}
+  .back:hover{color:var(--copper);}
+  header.title{padding:12px 0 40px;border-bottom:1px solid var(--line);}
+  .kicker{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--signal);margin-bottom:12px;}
+  h1{font-size:32px;font-weight:600;line-height:1.2;margin-bottom:14px;}
+  .authors{color:var(--muted);font-size:14px;}
+  .abstract{color:var(--muted);margin-top:20px;font-size:15px;max-width:70ch;}
+  section{padding:44px 0;border-bottom:1px solid var(--line);}
+  section:last-of-type{border-bottom:none;}
+  .sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:24px;}
+  .sec-num{font-family:'IBM Plex Mono',monospace;color:var(--copper);font-size:13px;}
+  .sec-head h2{font-size:20px;font-weight:600;}
+  p.body-text{color:var(--muted);font-size:14.5px;margin-bottom:12px;max-width:72ch;}
+
+  .diagram-box{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:24px;}
+  .diagram-box svg{width:100%;height:auto;display:block;}
+  .diagram-cap{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted);margin-top:14px;}
+
+  .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+  .stat{border:1px solid var(--line);border-radius:var(--radius);padding:14px 12px;background:var(--panel);}
+  .stat .num{font-family:'IBM Plex Mono',monospace;font-size:19px;color:var(--copper);}
+  .stat .lab{font-size:11.5px;color:var(--muted);margin-top:4px;}
+
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  table th, table td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;}
+  table th{font-family:'IBM Plex Mono',monospace;color:var(--muted);font-weight:500;font-size:11.5px;}
+  table td.mono-cell{font-family:'IBM Plex Mono',monospace;color:var(--text);font-size:12px;}
+  .table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--panel);padding:4px 18px;}
+  .table-title{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--signal);margin:22px 0 8px;}
+  .table-title:first-child{margin-top:4px;}
+
+  .vio-note{display:flex;gap:14px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;margin-top:18px;}
+  .vio-note .dot{width:8px;height:8px;border-radius:50%;background:var(--signal);margin-top:6px;flex:none;}
+  .vio-note p{color:var(--muted);font-size:13.5px;}
+
+  footer{padding:44px 0 40px;text-align:center;}
+  footer a.btn{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:13px;padding:10px 18px;border:1px solid var(--line);border-radius:var(--radius);text-decoration:none;color:var(--text);}
+  footer a.btn:hover{border-color:var(--copper);color:var(--copper);}
+
+  @media (prefers-color-scheme: light){
+    :root{--bg:#F6F5F1; --panel:#FFFFFF; --line:#DEDAD0; --text:#1B1C19; --muted:#5B6260; --copper:#B4632B; --signal:#2E6E7A;}
+  }
+  @media (max-width:640px){
+    h1{font-size:24px;}
+    .stat-grid{grid-template-columns:1fr 1fr;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back mono" href="index.html">← Back to portfolio</a>
+
+  <header class="title">
+    <div class="kicker">// RESEARCH · RTL DESIGN · FPGA · HARDWARE SECURITY</div>
+    <h1>Hardware-Rooted Secure Communication Architecture for UAV Command &amp; Control Using Multi-Bit RO-PUF, AES-128, and HMAC-SHA-256 on FPGA</h1>
+    <div class="authors">Kavin M · Dr V. Jeyalakshmi · P. Varalakshmi — manuscript in preparation, 2026</div>
+    <p class="abstract">A lightweight, hardware-rooted security architecture for UAV command-and-control links. A challenge-controlled multi-bit Ring Oscillator PUF generates device-unique key material with no key stored in non-volatile memory; the response is whitened by SHA-256, used to key AES-128 encryption and an HMAC-SHA-256 integrity tag, with a 32-bit hardware packet counter blocking replay. Implemented as the Ground Base Station transmitter on a Xilinx Artix-7 FPGA (Basys 3).</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">01</span><h2>Architecture</h2></div>
+    <p class="body-text">Ground Base Station transmit data path. A challenge issued by the UAV drives the RO-PUF; its 128-bit response is concatenated with the payload and passed through SHA-256 to derive a session key. The lower 128 bits key AES-128 encryption; the full 256-bit digest keys the HMAC-SHA-256 tag computed over the ciphertext and packet counter — an Encrypt-then-MAC pipeline that ensures the receiver never processes unauthenticated ciphertext.</p>
+    <div class="diagram-box">
+      <svg viewBox="0 0 720 520" xmlns="http://www.w3.org/2000/svg" font-family="IBM Plex Mono">
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#5FA9B8"/>
+          </marker>
+        </defs>
+        <g fill="none" stroke="#3A4A4E" stroke-width="1.3" marker-end="url(#arrow)">
+          <path d="M360 30 V56"/>
+          <path d="M360 100 V126"/>
+          <path d="M360 152 V178"/>
+          <path d="M300 226 V252 H360 V270"/>
+          <path d="M300 296 V330"/>
+          <path d="M300 356 V382"/>
+          <path d="M300 408 V434"/>
+        </g>
+        <text x="360" y="22" text-anchor="middle" font-size="11" fill="#8FA0A0">CHALLENGE</text>
+
+        <rect x="290" y="56" width="140" height="44" rx="2" fill="none" stroke="#5FA9B8"/>
+        <text x="360" y="83" text-anchor="middle" font-size="12" fill="#E7E9E7">RO-PUF</text>
+
+        <rect x="440" y="146" width="100" height="30" rx="2" fill="none" stroke="#3A4A4E"/>
+        <text x="490" y="166" text-anchor="middle" font-size="10" fill="#8FA0A0">PAYLOAD</text>
+        <path d="M440 161 H430" stroke="#3A4A4E" fill="none" marker-end="url(#arrow)"/>
+
+        <path d="M360 126 V152" stroke="#3A4A4E" fill="none" marker-end="url(#arrow)"/>
+
+        <path d="M360 178 L300 226" stroke="#3A4A4E" fill="none"/>
+        <polygon points="270,178 450,178 420,226 300,226" fill="none" stroke="#5FA9B8"/>
+        <text x="360" y="207" text-anchor="middle" font-size="12" fill="#E7E9E7">SHA-256</text>
+
+        <rect x="230" y="270" width="80" height="30" rx="2" fill="none" stroke="#3A4A4E"/>
+        <rect x="320" y="270" width="80" height="30" rx="2" fill="none" stroke="#3A4A4E"/>
+        <text x="270" y="290" text-anchor="middle" font-size="10.5" fill="#8FA0A0">128 bit</text>
+        <text x="360" y="290" text-anchor="middle" font-size="10.5" fill="#8FA0A0">128 bit</text>
+        <path d="M270 300 V330 H300" stroke="#3A4A4E" fill="none" marker-end="url(#arrow)"/>
+
+        <rect x="230" y="330" width="140" height="44" rx="2" fill="none" stroke="#5FA9B8"/>
+        <text x="300" y="357" text-anchor="middle" font-size="12" fill="#E7E9E7">AES-128</text>
+
+        <rect x="230" y="382" width="140" height="34" rx="2" fill="none" stroke="#3A4A4E"/>
+        <text x="300" y="403" text-anchor="middle" font-size="11" fill="#E7E9E7">SEQUENCE COUNTER</text>
+
+        <rect x="220" y="434" width="160" height="44" rx="2" fill="none" stroke="#5FA9B8"/>
+        <text x="300" y="461" text-anchor="middle" font-size="12" fill="#E7E9E7">HMAC-SHA-256</text>
+
+        <path d="M400 300 V456 H380" stroke="#3A4A4E" fill="none" marker-end="url(#arrow)"/>
+        <path d="M380 400 V460" stroke="#3A4A4E" fill="none"/>
+
+        <path d="M300 356 H520 V456 H380" stroke="#3A4A4E" fill="none" marker-end="url(#arrow)"/>
+        <circle cx="520" cy="461" r="16" fill="none" stroke="#CE8A4E"/>
+        <text x="520" y="465" text-anchor="middle" font-size="12" fill="#CE8A4E">+</text>
+        <path d="M380 461 H504" stroke="#3A4A4E" fill="none" marker-end="url(#arrow)"/>
+        <path d="M536 461 H600" stroke="#5FA9B8" fill="none" marker-end="url(#arrow)"/>
+        <text x="605" y="450" font-size="10" fill="#8FA0A0">SECURED</text>
+        <text x="605" y="463" font-size="10" fill="#8FA0A0">DATA TO</text>
+        <text x="605" y="476" font-size="10" fill="#8FA0A0">UAV</text>
+        <text x="605" y="489" font-size="9.5" fill="#5FA9B8">288 bit</text>
+      </svg>
+      <div class="diagram-cap">Ground Base Station transmit-side data path — RO-PUF → SHA-256 key derivation → AES-128 encryption → HMAC-SHA-256 (Encrypt-then-MAC) with replay-protecting packet counter.</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">02</span><h2>FPGA Results</h2></div>
+    <div class="stat-grid">
+      <div class="stat"><div class="num">17,500</div><div class="lab">Slice LUTs</div></div>
+      <div class="stat"><div class="num">11,727</div><div class="lab">Slice registers</div></div>
+      <div class="stat"><div class="num">16.5 MHz</div><div class="lab">Max frequency</div></div>
+      <div class="stat"><div class="num">0.298 W</div><div class="lab">Total on-chip power</div></div>
+      <div class="stat"><div class="num">0.000 ns</div><div class="lab">Total negative slack</div></div>
+      <div class="stat"><div class="num">7.952 ns</div><div class="lab">Worst negative slack</div></div>
+      <div class="stat"><div class="num">0</div><div class="lab">Failing timing endpoints</div></div>
+      <div class="stat"><div class="num">0</div><div class="lab">BRAM / DSP slices used</div></div>
+    </div>
+    <p class="body-text" style="margin-top:18px;">Synthesized on a Xilinx Artix-7 (XC7A35T-1CPG236C, Basys 3) in Vivado 2017.4, using slice logic only — no dedicated Block RAM or DSP resources, which keeps the design portable to smaller UAV-grade FPGAs.</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">03</span><h2>Output — VIO Hardware Validation</h2></div>
+    <p class="body-text">Functional correctness was verified on-chip with a Virtual Input/Output (VIO) debug core across ten randomized 128-bit challenge vectors, confirming the full progression from raw PUF entropy to the final authenticated, encrypted packet.</p>
+
+    <div class="table-title">Challenge → Raw PUF Response (128-bit)</div>
+    <div class="table-wrap"><table>
+      <tr><th>Set</th><th>Challenge (hex)</th><th>PUF Output (hex)</th></tr>
+      <tr><td class="mono-cell">1</td><td class="mono-cell">3A8F…F091</td><td class="mono-cell">44F1…18A3</td></tr>
+      <tr><td class="mono-cell">2</td><td class="mono-cell">9B4C…8706</td><td class="mono-cell">4607…C4B9</td></tr>
+      <tr><td class="mono-cell">3</td><td class="mono-cell">F1E2…6F70</td><td class="mono-cell">407F…2E1F</td></tr>
+      <tr><td class="mono-cell">4</td><td class="mono-cell">7045…8706</td><td class="mono-cell">4455…8407</td></tr>
+      <tr><td class="mono-cell">5</td><td class="mono-cell">5C6D…3A4B</td><td class="mono-cell">44BA…D6C5</td></tr>
+    </table></div>
+
+    <div class="table-title">Challenge → SHA-256 Digest (session key)</div>
+    <div class="table-wrap"><table>
+      <tr><th>Set</th><th>Challenge (hex)</th><th>Digest (hex)</th></tr>
+      <tr><td class="mono-cell">1</td><td class="mono-cell">3A8F…F091</td><td class="mono-cell">4731…3267</td></tr>
+      <tr><td class="mono-cell">2</td><td class="mono-cell">9B4C…8706</td><td class="mono-cell">F264…AE3E</td></tr>
+      <tr><td class="mono-cell">3</td><td class="mono-cell">F1E2…6F70</td><td class="mono-cell">38F8…1E47</td></tr>
+      <tr><td class="mono-cell">4</td><td class="mono-cell">7045…8706</td><td class="mono-cell">E29D…4D73</td></tr>
+      <tr><td class="mono-cell">5</td><td class="mono-cell">5C6D…3A4B</td><td class="mono-cell">8CB7…7670</td></tr>
+    </table></div>
+
+    <div class="table-title">Challenge → Encrypted Payload (288-bit) &amp; HMAC Tag (256-bit)</div>
+    <div class="table-wrap"><table>
+      <tr><th>Set</th><th>Encrypted Payload (hex)</th><th>HMAC Tag (hex)</th></tr>
+      <tr><td class="mono-cell">1</td><td class="mono-cell">505F…44D7</td><td class="mono-cell">AAD5…0599</td></tr>
+      <tr><td class="mono-cell">2</td><td class="mono-cell">6945…359E</td><td class="mono-cell">4A52…9FFD</td></tr>
+      <tr><td class="mono-cell">3</td><td class="mono-cell">D5ED…2245</td><td class="mono-cell">F26B…9339</td></tr>
+      <tr><td class="mono-cell">4</td><td class="mono-cell">4B6E…F23F</td><td class="mono-cell">00CE…D8A8</td></tr>
+      <tr><td class="mono-cell">5</td><td class="mono-cell">6B08…6ADD</td><td class="mono-cell">FB0F…3DD2</td></tr>
+    </table></div>
+
+    <div class="vio-note">
+      <div class="dot"></div>
+      <p>All ten test vectors produced unique, non-repeating digests, ciphertexts, and HMAC tags per challenge — confirming the PUF-rooted key derivation avoids collisions and that the Encrypt-then-MAC pipeline validates correctly in hardware.</p>
+    </div>
+  </section>
+
+  <footer>
+    <a class="btn" href="mailto:kavinm865@gmail.com">Discuss this work →</a>
+  </footer>
+</div>
+</body>
+</html>
